@@ -178,6 +178,20 @@ public class Player {
     public double getHealth() { return health; }
     public int getCoins() { return coins; }
     public void addCoins(int val) { coins += val; }
+    
+    // damage and key methods
+    public void takeDamage(double damage) { 
+        health -= damage; 
+    }
+    
+    public void takeDamage(int damage) { 
+        health -= damage; 
+    }
+    
+    public void addKey() {
+        // Key count is managed by the game state
+        // This method is called when player collects a key
+    }
 
     // reset function
     public void reset(Properties gameProps) {

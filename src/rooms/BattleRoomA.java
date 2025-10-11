@@ -15,8 +15,8 @@ public class BattleRoomA {
     // door
     private Door doorToPrep;
     private Door doorToB;
-    // enemy
-    private Enemies enemy;
+    // enemy manager
+    private EnemyManager enemyManager;
     // wall
     private final Wall wall;
     // river
@@ -25,6 +25,8 @@ public class BattleRoomA {
     private TreasureBox box;
     // basket
     private Basket basket;
+    // table
+    private Table table;
 
     private boolean encounterStarted = false;
 
@@ -37,7 +39,7 @@ public class BattleRoomA {
         this.doorToB = new Door(gameProps, "secondarydoor.A");
 
         // enemies
-        this.enemy = new Enemies(gameProps, "keyBulletKin.A");
+        this.enemyManager = new EnemyManager(gameProps, "A");
 
         // wall
         this.wall = new Wall(gameProps, "wall.A");
@@ -50,13 +52,16 @@ public class BattleRoomA {
 
         // basket
         this.basket = new Basket(gameProps, "basket.A");
+
+        // table
+        this.table = new Table(gameProps, "table.A");
     }
 
     // get entities in room
     public Door[] getDoors() {
         return new Door[]{doorToPrep, doorToB};
     }
-    public Enemies getEnemies() { return enemy; }
+    public EnemyManager getEnemyManager() { return enemyManager; }
 
     // war status
     public void setEncounterStarted() {
@@ -89,7 +94,7 @@ public class BattleRoomA {
     public void reset(Properties gameProps) {
         doorToPrep = new Door(gameProps, "primarydoor.A");
         doorToB = new Door(gameProps, "secondarydoor.A");
-        enemy = new Enemies(gameProps, "keyBulletKin.A");
+        enemyManager = new EnemyManager(gameProps, "A");
         box = new TreasureBox(gameProps, "treasurebox.A");
     }
 
@@ -99,7 +104,7 @@ public class BattleRoomA {
         background.draw(Window.getWidth()/2.0, Window.getHeight()/2.0);
 
         // door
-        if (input.wasPressed(Keys.R) && !enemy.getStatus()) {
+        if (input.wasPressed(Keys.R) && !enemyManager.hasAliveEnemies()) {
             doorToPrep.doDoor();
             doorToB.doDoor();
         }
@@ -110,8 +115,8 @@ public class BattleRoomA {
         }
 
         // enemies and doors animation
-        if (enemy.getStatus() && encounterStarted) {
-            enemy.draw();
+        if (enemyManager.hasAliveEnemies() && encounterStarted) {
+            enemyManager.draw();
         } else {
             if (!encounterStarted) {
                 doorToPrep.unlock();
@@ -119,7 +124,7 @@ public class BattleRoomA {
         }
 
         // if die unlock all door
-        if (!enemy.getStatus()) {
+        if (!enemyManager.hasAliveEnemies()) {
             encounterStarted = false;
             doorToPrep.unlock();
             doorToB.unlock();
@@ -139,5 +144,8 @@ public class BattleRoomA {
 
         // basket
         basket.draw();
+
+        // table
+        table.draw();
     }
 }

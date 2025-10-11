@@ -4,7 +4,7 @@ import java.util.Properties;
 
 import bagel.util.Point;
 import entities.Door;
-import entities.Enemies;
+import entities.EnemyManager;
 import entities.PlayerUI;
 import utils.PlayerUpdateConfig;
 import utils.ReadDoor;
@@ -108,10 +108,8 @@ public class ShadowDungeon extends AbstractGame {
     }
 
     // used for enemies status update
-    private void enemiesUpdate(Enemies enemy) {
-        if (player.getBoundingBox().intersects(enemy.getBoundingBox())) {
-            enemy.kill();
-        }
+    private void enemiesUpdate(EnemyManager enemyManager) {
+        enemyManager.checkCollisions(player);
     }
 
     /* player update
@@ -172,7 +170,7 @@ public class ShadowDungeon extends AbstractGame {
             case "A":
                 battleRoomA.update(input);
                 positionUpdate(battleRoomA.getDoors());
-                enemiesUpdate(battleRoomA.getEnemies());
+                enemiesUpdate(battleRoomA.getEnemyManager());
                 playerUpdate(input, PlayerUpdateConfig.forBattle(
                         battleRoomA.getWallPositions(), battleRoomA.isWall(),
                         battleRoomA.getRiverPositions(), battleRoomA.isRiver(),
@@ -186,7 +184,7 @@ public class ShadowDungeon extends AbstractGame {
             case "B":
                 battleRoomB.update(input);
                 positionUpdate(battleRoomB.getDoors());
-                enemiesUpdate(battleRoomB.getEnemies());
+                enemiesUpdate(battleRoomB.getEnemyManager());
                 playerUpdate(input, PlayerUpdateConfig.forBattle(
                         battleRoomB.getWallPositions(), battleRoomB.isWall(),
                         battleRoomB.getRiverPositions(), battleRoomB.isRiver(),
