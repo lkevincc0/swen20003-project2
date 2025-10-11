@@ -19,4 +19,12 @@ public class Basket {
     public void draw() {
         basketImage.draw(basketPoint.x, basketPoint.y);
     }
+
+    public Point getPosition() {
+        return basketPoint;
+    }
+
+    public bagel.util.Rectangle getBoundingBox() {
+        return basketImage.getBoundingBoxAt(basketPoint);
+    }
 }

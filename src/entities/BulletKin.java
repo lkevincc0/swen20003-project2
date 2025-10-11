@@ -86,6 +86,50 @@ public class BulletKin extends Enemy {
         fireballs.clear();
     }
     
+    /**
+     * Check fireball collisions with obstacles
+     */
+    public void checkFireballObstacleCollisions(Wall wall, Table table, Basket basket, Door door1, Door door2) {
+        fireballs.removeIf(fireball -> {
+            if (!fireball.isActive()) return true;
+            
+            // Check collision with walls
+            if (wall.isWall()) {
+                for (Point wallPos : wall.getPositions()) {
+                    if (fireball.getBoundingBox().intersects(wall.getBoundingBoxAt(wallPos))) {
+                        fireball.destroy();
+                        return true;
+                    }
+                }
+            }
+            
+            // Check collision with table
+            if (fireball.getBoundingBox().intersects(table.getBoundingBox())) {
+                fireball.destroy();
+                return true;
+            }
+            
+            // Check collision with basket
+            if (fireball.getBoundingBox().intersects(basket.getBoundingBox())) {
+                fireball.destroy();
+                return true;
+            }
+            
+            // Check collision with locked doors
+            if (door1.getIsLocked() && fireball.getBoundingBox().intersects(door1.getBoundingBox())) {
+                fireball.destroy();
+                return true;
+            }
+            
+            if (door2.getIsLocked() && fireball.getBoundingBox().intersects(door2.getBoundingBox())) {
+                fireball.destroy();
+                return true;
+            }
+            
+            return false;
+        });
+    }
+    
     @Override
     public double getContactDamage() {
         return CONTACT_DAMAGE;

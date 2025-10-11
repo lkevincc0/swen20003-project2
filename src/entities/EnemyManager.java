@@ -213,4 +213,19 @@ public class EnemyManager {
             }
         }
     }
+    
+    /**
+     * Check fireball collisions with obstacles
+     */
+    public void checkFireballObstacleCollisions(Wall wall, Table table, Basket basket, Door door1, Door door2) {
+        for (Enemy enemy : enemies) {
+            if (enemy instanceof BulletKin) {
+                BulletKin bulletKin = (BulletKin) enemy;
+                bulletKin.checkFireballObstacleCollisions(wall, table, basket, door1, door2);
+            } else if (enemy instanceof AshenBulletKin) {
+                AshenBulletKin ashenBulletKin = (AshenBulletKin) enemy;
+                ashenBulletKin.checkFireballObstacleCollisions(wall, table, basket, door1, door2);
+            }
+        }
+    }
 }

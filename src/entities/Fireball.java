@@ -8,7 +8,7 @@ import bagel.util.Vector2;
  * Fireball projectile fired by enemies
  */
 public class Fireball {
-    private static final String FIREBALL_IMAGE = "res/bullet_kin.png"; // TODO: replace with fireball.png when available
+    private static final String FIREBALL_IMAGE = "res/fireball.png";
     private static final double SPEED = 4.0; // pixels per frame
     private static final int DAMAGE = 40; // damage to player
     

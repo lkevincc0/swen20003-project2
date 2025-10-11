@@ -8,7 +8,7 @@ import bagel.util.Rectangle;
  * Key collectible item
  */
 public class Key {
-    private static final String KEY_IMAGE = "res/treasure_box.png"; // TODO: replace with key.png when available
+    private static final String KEY_IMAGE = "res/key.png";
     
     private Image image;
     private Point position;

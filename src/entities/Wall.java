@@ -43,4 +43,8 @@ public class Wall {
             wallImage.draw(position.x, position.y);
         }
     }
+
+    public bagel.util.Rectangle getBoundingBoxAt(Point position) {
+        return wallImage.getBoundingBoxAt(position);
+    }
 }

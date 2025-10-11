@@ -18,4 +18,12 @@ public class Table {
     public void draw() {
         tableImage.draw(tablePoint.x, tablePoint.y);
     }
+
+    public Point getPosition() {
+        return tablePoint;
+    }
+
+    public bagel.util.Rectangle getBoundingBox() {
+        return tableImage.getBoundingBoxAt(tablePoint);
+    }
 }

@@ -175,6 +175,10 @@ public class Player {
         position = newPosition;
     }
 
+    public Point getPosition() {
+        return position;
+    }
+
     // judge whether touch door or not
     private Image getCurrentImage() {
         return facingRight ? playerRight : playerLeft;
@@ -259,9 +263,51 @@ public class Player {
     public List<Bullet> getBullets() {
         return new ArrayList<>(bullets);
     }
-    
+
     public void clearBullets() {
         bullets.clear();
+    }
+
+    // Check bullet collisions with obstacles
+    public void checkBulletObstacleCollisions(Wall wall, Table table, Basket basket, Door door1, Door door2) {
+        bullets.removeIf(bullet -> {
+            if (!bullet.isActive()) return true;
+            
+            // Check collision with walls
+            if (wall.isWall()) {
+                for (Point wallPos : wall.getPositions()) {
+                    if (bullet.getBoundingBox().intersects(wall.getBoundingBoxAt(wallPos))) {
+                        bullet.destroy();
+                        return true;
+                    }
+                }
+            }
+            
+            // Check collision with table
+            if (bullet.getBoundingBox().intersects(table.getBoundingBox())) {
+                bullet.destroy();
+                return true;
+            }
+            
+            // Check collision with basket
+            if (bullet.getBoundingBox().intersects(basket.getBoundingBox())) {
+                bullet.destroy();
+                return true;
+            }
+            
+            // Check collision with locked doors
+            if (door1.getIsLocked() && bullet.getBoundingBox().intersects(door1.getBoundingBox())) {
+                bullet.destroy();
+                return true;
+            }
+            
+            if (door2.getIsLocked() && bullet.getBoundingBox().intersects(door2.getBoundingBox())) {
+                bullet.destroy();
+                return true;
+            }
+            
+            return false;
+        });
     }
     
     public int getWeaponLevel() {
