@@ -15,8 +15,8 @@ public class Player {
     private double health;
     private int coins;
     private int speed;
-    private final Image playerLeft;
-    private final Image playerRight;
+    public Image playerLeft;
+    public Image playerRight;
     private boolean facingRight;
 
     // game logic
@@ -36,7 +36,7 @@ public class Player {
         this.health = health;
         this.coins = coins;
         this.speed = speed;
-        this.playerLeft = new Image("res/player_left.png");
+        this.playerLeft = new Image("res/player_left.png"); // default
         this.playerRight = new Image("res/player_right.png");
         this.facingRight = true;
         // images - used for get rectangle

@@ -23,6 +23,8 @@ public class BattleRoomA {
     private final River river;
     // box
     private TreasureBox box;
+    // basket
+    private Basket basket;
 
     private boolean encounterStarted = false;
 
@@ -45,6 +47,9 @@ public class BattleRoomA {
 
         // box
         this.box = new TreasureBox(gameProps, "treasurebox.A");
+
+        // basket
+        this.basket = new Basket(gameProps, "basket.A");
     }
 
     // get entities in room
@@ -131,5 +136,8 @@ public class BattleRoomA {
 
         // Box
         box.draw();
+
+        // basket
+        basket.draw();
     }
 }

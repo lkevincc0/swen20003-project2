@@ -155,6 +155,19 @@ public class ShadowDungeon extends AbstractGame {
                     resetGame(GAME_PROPS);
                 }
                 player.Restart = false;
+
+                /* update player image */
+                if (input.wasPressed(Keys.M)) {
+                    // marine
+                    player.playerLeft = new Image("res/marine_left.png");
+                    player.playerRight = new Image("res/marine_right.png");
+                }
+
+                if (input.wasPressed(Keys.R)) {
+                    // Robot
+                    player.playerLeft = new Image("res/robot_left.png");
+                    player.playerRight = new Image("res/robot_right.png");
+                }
                 break;
             case "A":
                 battleRoomA.update(input);
