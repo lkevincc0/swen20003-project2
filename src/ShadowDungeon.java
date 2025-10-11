@@ -6,6 +6,7 @@ import bagel.util.Point;
 import entities.Door;
 import entities.EnemyManager;
 import entities.PlayerUI;
+import entities.Store;
 import utils.PlayerUpdateConfig;
 import utils.ReadDoor;
 import entities.Player;
@@ -31,6 +32,7 @@ public class ShadowDungeon extends AbstractGame {
 
     // player ui
     private final PlayerUI playerUI;
+    private final Store store;
 
     public ShadowDungeon(Properties gameProps, Properties messageProps) {
         super(Integer.parseInt(gameProps.getProperty("window.width")),
@@ -60,6 +62,7 @@ public class ShadowDungeon extends AbstractGame {
 
         /* UI */
         this.playerUI = new PlayerUI(gameProps);
+        this.store = new Store(gameProps);
 
         // manage entry and exit point of door
         new ReadDoor(gameProps);
@@ -142,6 +145,18 @@ public class ShadowDungeon extends AbstractGame {
         if (input.wasPressed(Keys.ESCAPE)) {
             Window.close();
         }
+        
+        // Handle store toggle
+        if (input.wasPressed(Keys.SPACE)) {
+            store.toggle();
+        }
+        
+        // If store is visible, handle store input and skip game updates
+        if (store.isVisible()) {
+            store.update(input, player);
+            store.draw();
+            return;
+        }
 
         switch (currRoom) {
             case "prep":
@@ -159,18 +174,21 @@ public class ShadowDungeon extends AbstractGame {
                     // marine
                     player.playerLeft = new Image("res/marine_left.png");
                     player.playerRight = new Image("res/marine_right.png");
+                    player.setCharacterSelected(true);
                 }
 
                 if (input.wasPressed(Keys.R)) {
                     // Robot
                     player.playerLeft = new Image("res/robot_left.png");
                     player.playerRight = new Image("res/robot_right.png");
+                    player.setCharacterSelected(true);
                 }
                 break;
             case "A":
                 battleRoomA.update(input);
                 positionUpdate(battleRoomA.getDoors());
                 enemiesUpdate(battleRoomA.getEnemyManager());
+                battleRoomA.getEnemyManager().checkBulletCollisions(player);
                 playerUpdate(input, PlayerUpdateConfig.forBattle(
                         battleRoomA.getWallPositions(), battleRoomA.isWall(),
                         battleRoomA.getRiverPositions(), battleRoomA.isRiver(),
@@ -185,6 +203,7 @@ public class ShadowDungeon extends AbstractGame {
                 battleRoomB.update(input);
                 positionUpdate(battleRoomB.getDoors());
                 enemiesUpdate(battleRoomB.getEnemyManager());
+                battleRoomB.getEnemyManager().checkBulletCollisions(player);
                 playerUpdate(input, PlayerUpdateConfig.forBattle(
                         battleRoomB.getWallPositions(), battleRoomB.isWall(),
                         battleRoomB.getRiverPositions(), battleRoomB.isRiver(),

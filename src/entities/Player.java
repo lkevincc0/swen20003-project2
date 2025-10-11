@@ -3,10 +3,13 @@ package entities;
 import bagel.Image;
 import bagel.Input;
 import bagel.Keys;
+import bagel.MouseButtons;
 import bagel.Window;
 import bagel.util.Point;
 import bagel.util.Rectangle;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -14,10 +17,19 @@ public class Player {
     private Point position;
     private double health;
     private int coins;
+    private int keys; // key count
     private int speed;
     public Image playerLeft;
     public Image playerRight;
     private boolean facingRight;
+
+    // Shooting system
+    private List<Bullet> bullets;
+    private int weaponLevel; // 0=Standard, 1=Advanced, 2=Elite
+    private int framesSinceLastShot;
+    private static final int FIRE_RATE = 30; // frames between shots
+    private static final int[] WEAPON_DAMAGE = {30, 50, 100}; // damage per level
+    private boolean characterSelected; // can only shoot after selecting character
 
     // game logic
     public boolean Restart = false;
@@ -35,10 +47,18 @@ public class Player {
         this.position = startPos;
         this.health = health;
         this.coins = coins;
+        this.keys = 0;
         this.speed = speed;
         this.playerLeft = new Image("res/player_left.png"); // default
         this.playerRight = new Image("res/player_right.png");
         this.facingRight = true;
+        
+        // Initialize shooting system
+        this.bullets = new ArrayList<>();
+        this.weaponLevel = 0; // Standard weapon
+        this.framesSinceLastShot = 0;
+        this.characterSelected = false;
+        
         // images - used for get rectangle
         this.wallImage = new Image("res/wall.png");
         this.riverImage = new Image("res/river.png");
@@ -188,9 +208,12 @@ public class Player {
         health -= damage; 
     }
     
+    public void addHealth(int amount) {
+        health += amount;
+    }
+    
     public void addKey() {
-        // Key count is managed by the game state
-        // This method is called when player collects a key
+        keys++;
     }
 
     // reset function
@@ -201,6 +224,66 @@ public class Player {
         health = Integer.parseInt(gameProps.getProperty("initialHealth"));
         coins = Integer.parseInt(gameProps.getProperty("initialCoins"));
         speed = Integer.parseInt(gameProps.getProperty("movingSpeed"));
+    }
+
+    // Shooting system methods
+    public void setCharacterSelected(boolean selected) {
+        this.characterSelected = selected;
+    }
+    
+    public boolean canShoot() {
+        return characterSelected;
+    }
+    
+    public void shoot(Point mousePosition) {
+        if (!canShoot()) return;
+        
+        // Create bullet immediately on click
+        Bullet bullet = new Bullet(position, mousePosition, WEAPON_DAMAGE[weaponLevel]);
+        bullets.add(bullet);
+    }
+    
+    public void updateBullets() {
+        bullets.removeIf(bullet -> {
+            bullet.update();
+            return !bullet.isActive();
+        });
+    }
+    
+    public void drawBullets() {
+        for (Bullet bullet : bullets) {
+            bullet.draw();
+        }
+    }
+    
+    public List<Bullet> getBullets() {
+        return new ArrayList<>(bullets);
+    }
+    
+    public void clearBullets() {
+        bullets.clear();
+    }
+    
+    public int getWeaponLevel() {
+        return weaponLevel;
+    }
+    
+    public void upgradeWeapon() {
+        if (weaponLevel < 2) {
+            weaponLevel++;
+        }
+    }
+    
+    public int getKeys() {
+        return keys;
+    }
+    
+    public boolean useKey() {
+        if (keys > 0) {
+            keys--;
+            return true;
+        }
+        return false;
     }
 
     // update function
@@ -219,6 +302,16 @@ public class Player {
         move(input, wallBoundaries, isWall, riverBoundaries, isRiver, restartBoundaries, isRestart, isBox, boxMap, openedMap);
         Point mouse = input.getMousePosition();
         facingRight = mouse.x >= position.x;
+        
+        // Handle shooting
+        if (input.wasPressed(MouseButtons.LEFT)) {
+            shoot(mouse);
+        }
+        
+        // Update bullets
+        updateBullets();
+        
         draw();
+        drawBullets();
     }
 }

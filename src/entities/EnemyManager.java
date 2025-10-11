@@ -137,6 +137,35 @@ public class EnemyManager {
             }
         }
     }
+    
+    /**
+     * Check bullet collisions with enemies
+     */
+    public void checkBulletCollisions(Player player) {
+        for (Bullet bullet : player.getBullets()) {
+            if (!bullet.isActive()) continue;
+            
+            // Check collision with enemies
+            for (Enemy enemy : enemies) {
+                if (enemy.isAlive() && bullet.getBoundingBox().intersects(enemy.getBoundingBox())) {
+                    // Damage enemy
+                    enemy.takeDamage(bullet.getDamage());
+                    bullet.destroy();
+                    
+                    // Award coins if enemy dies
+                    if (!enemy.isAlive()) {
+                        int coinReward = enemy.getCoinReward();
+                        // Add robot bonus if applicable
+                        if (player.playerLeft.toString().contains("robot")) {
+                            coinReward += enemy.getRobotBonus();
+                        }
+                        player.addCoins(coinReward);
+                    }
+                    break;
+                }
+            }
+        }
+    }
 
     /**
      * Draw all enemies and keys
