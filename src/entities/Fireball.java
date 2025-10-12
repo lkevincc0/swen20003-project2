@@ -3,27 +3,32 @@ package entities;
 import bagel.Image;
 import bagel.util.Point;
 import bagel.util.Vector2;
+import java.util.Properties;
 
 /**
  * Fireball projectile fired by enemies
  */
 public class Fireball {
     private static final String FIREBALL_IMAGE = "res/fireball.png";
-    private static final double SPEED = 4.0; // pixels per frame
-    private static final int DAMAGE = 40; // damage to player
     
     private Image image;
     private Point position;
     private Vector2 direction;
     private boolean active;
+    private double speed;
+    private int damage;
     
     /**
      * Create fireball at position targeting player
      */
-    public Fireball(Point startPos, Point targetPos) {
+    public Fireball(Point startPos, Point targetPos, Properties gameProps) {
         this.image = new Image(FIREBALL_IMAGE);
         this.position = startPos;
         this.active = true;
+        
+        // Read properties
+        this.speed = Double.parseDouble(gameProps.getProperty("fireballSpeed"));
+        this.damage = Integer.parseInt(gameProps.getProperty("fireballDamage"));
         
         // Calculate direction vector
         double dx = targetPos.x - startPos.x;
@@ -45,8 +50,8 @@ public class Fireball {
         
         // Move fireball
         position = new Point(
-            position.x + direction.x * SPEED,
-            position.y + direction.y * SPEED
+            position.x + direction.x * speed,
+            position.y + direction.y * speed
         );
         
         // Check screen boundaries
@@ -97,6 +102,6 @@ public class Fireball {
      * Get damage value
      */
     public int getDamage() {
-        return DAMAGE;
+        return damage;
     }
 }

@@ -34,7 +34,7 @@ public class EnemyManager {
                 double x = Double.parseDouble(xy[0]);
                 double y = Double.parseDouble(xy[1]);
                 Point position = new Point(x, y);
-                enemies.add(new BulletKin(position));
+                enemies.add(new BulletKin(position, gameProps));
             }
         }
     }
@@ -51,7 +51,7 @@ public class EnemyManager {
                 double x = Double.parseDouble(xy[0]);
                 double y = Double.parseDouble(xy[1]);
                 Point position = new Point(x, y);
-                enemies.add(new AshenBulletKin(position));
+                enemies.add(new AshenBulletKin(position, gameProps));
             }
         }
     }
@@ -71,7 +71,7 @@ public class EnemyManager {
                 path.add(new Point(x, y));
             }
             if (!path.isEmpty()) {
-                enemies.add(new KeyBulletKin(path.get(0), path));
+                enemies.add(new KeyBulletKin(path.get(0), path, gameProps));
             }
         }
     }

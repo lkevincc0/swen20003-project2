@@ -3,17 +3,18 @@ package entities;
 import bagel.Image;
 import bagel.util.Point;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Key Bullet Kin enemy - moves along path, drops key on death
  */
 public class KeyBulletKin extends Enemy {
     private static final String KEY_BULLET_KIN_IMAGE = "res/key_bullet_kin.png";
-    private static final int MAX_HEALTH = 30;
-    private static final double MOVEMENT_SPEED = 4.0; // pixels per frame
-    private static final double CONTACT_DAMAGE = 0.2; // per frame
-    private static final int COIN_REWARD = 0; // no coins, drops key instead
-    private static final int ROBOT_BONUS = 0;
+    private final int maxHealth;
+    private final double movementSpeed;
+    private final double contactDamage;
+    private final int coinReward;
+    private final int robotBonus;
     
     private List<Point> movementPath;
     private int currentTargetIndex;
@@ -22,8 +23,13 @@ public class KeyBulletKin extends Enemy {
     /**
      * Create KeyBulletKin with movement path
      */
-    public KeyBulletKin(Point startPosition, List<Point> path) {
-        super(new Image(KEY_BULLET_KIN_IMAGE), startPosition, MAX_HEALTH);
+    public KeyBulletKin(Point startPosition, List<Point> path, Properties gameProps) {
+        super(new Image(KEY_BULLET_KIN_IMAGE), startPosition, Integer.parseInt(gameProps.getProperty("keyBulletKinHealth")));
+        this.maxHealth = Integer.parseInt(gameProps.getProperty("keyBulletKinHealth"));
+        this.movementSpeed = Double.parseDouble(gameProps.getProperty("keyBulletKinSpeed"));
+        this.contactDamage = 0.2; // Contact damage per frame (not in properties)
+        this.coinReward = 0; // KeyBulletKin doesn't give coins directly
+        this.robotBonus = 0; // KeyBulletKin doesn't give robot bonus
         this.movementPath = path;
         this.currentTargetIndex = 0;
         this.droppedKey = null;
@@ -62,14 +68,14 @@ public class KeyBulletKin extends Enemy {
         double dy = target.y - currentPos.y;
         double distance = Math.sqrt(dx * dx + dy * dy);
         
-        if (distance <= MOVEMENT_SPEED) {
+        if (distance <= movementSpeed) {
             // Reached target, move to next point
             setPosition(target);
             currentTargetIndex = (currentTargetIndex + 1) % movementPath.size();
         } else {
             // Move towards target
-            double moveX = (dx / distance) * MOVEMENT_SPEED;
-            double moveY = (dy / distance) * MOVEMENT_SPEED;
+            double moveX = (dx / distance) * movementSpeed;
+            double moveY = (dy / distance) * movementSpeed;
             setPosition(new Point(currentPos.x + moveX, currentPos.y + moveY));
         }
     }
@@ -100,17 +106,17 @@ public class KeyBulletKin extends Enemy {
     
     @Override
     public double getContactDamage() {
-        return CONTACT_DAMAGE;
+        return contactDamage;
     }
     
     @Override
     public int getCoinReward() {
-        return COIN_REWARD;
+        return coinReward;
     }
     
     @Override
     public int getRobotBonus() {
-        return ROBOT_BONUS;
+        return robotBonus;
     }
     
     @Override

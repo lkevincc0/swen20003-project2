@@ -4,32 +4,40 @@ import bagel.Image;
 import bagel.util.Point;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Bullet Kin enemy - stationary, shoots fireballs
  */
 public class BulletKin extends Enemy {
     private static final String BULLET_KIN_IMAGE = "res/bullet_kin.png";
-    private static final int MAX_HEALTH = 100;
-    private static final int FIRE_RATE = 360; // frames between shots
-    private static final double CONTACT_DAMAGE = 0.2; // per frame
-    private static final int COIN_REWARD = 10;
-    private static final int ROBOT_BONUS = 5;
+    private final int maxHealth;
+    private final int fireRate;
+    private final double contactDamage;
+    private final int coinReward;
+    private final int robotBonus;
     
     private int framesSinceLastShot;
     private List<Fireball> fireballs;
     private Point playerPosition; // track player for targeting
+    private Properties gameProps;
     
     /**
      * Create BulletKin at position
      */
-    public BulletKin(Point position) {
-        super(new Image(BULLET_KIN_IMAGE), position, MAX_HEALTH);
+    public BulletKin(Point position, Properties gameProps) {
+        super(new Image(BULLET_KIN_IMAGE), position, Integer.parseInt(gameProps.getProperty("bulletKinHealth")));
+        this.maxHealth = Integer.parseInt(gameProps.getProperty("bulletKinHealth"));
+        this.fireRate = Integer.parseInt(gameProps.getProperty("bulletKinShootFrequency"));
+        this.contactDamage = 0.2; // Contact damage per frame (not in properties)
+        this.coinReward = Integer.parseInt(gameProps.getProperty("bulletKinCoin"));
+        this.robotBonus = Integer.parseInt(gameProps.getProperty("robotExtraCoin"));
         this.framesSinceLastShot = 0;
         this.fireballs = new ArrayList<>();
+        this.gameProps = gameProps;
         
         // Fire immediately when spawned
-        this.framesSinceLastShot = FIRE_RATE;
+        this.framesSinceLastShot = fireRate;
     }
     
     @Override
@@ -40,7 +48,7 @@ public class BulletKin extends Enemy {
         framesSinceLastShot++;
         
         // Fire fireball if enough time passed
-        if (framesSinceLastShot >= FIRE_RATE) {
+        if (framesSinceLastShot >= fireRate) {
             fireFireball();
             framesSinceLastShot = 0;
         }
@@ -57,7 +65,7 @@ public class BulletKin extends Enemy {
      */
     private void fireFireball() {
         if (playerPosition != null) {
-            Fireball fireball = new Fireball(getPosition(), playerPosition);
+            Fireball fireball = new Fireball(getPosition(), playerPosition, gameProps);
             fireballs.add(fireball);
         }
     }
@@ -132,17 +140,17 @@ public class BulletKin extends Enemy {
     
     @Override
     public double getContactDamage() {
-        return CONTACT_DAMAGE;
+        return contactDamage;
     }
     
     @Override
     public int getCoinReward() {
-        return COIN_REWARD;
+        return coinReward;
     }
     
     @Override
     public int getRobotBonus() {
-        return ROBOT_BONUS;
+        return robotBonus;
     }
     
     @Override
