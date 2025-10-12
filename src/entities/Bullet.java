@@ -3,13 +3,14 @@ package entities;
 import bagel.Image;
 import bagel.util.Point;
 import bagel.util.Vector2;
+import java.util.Properties;
 
 /**
  * Player bullet projectile
  */
 public class Bullet {
     private static final String BULLET_IMAGE = "res/fireball.png"; // use fireball as bullet image
-    private static final double SPEED = 4.0; // pixels per frame
+    private final double speed;
     
     private Image image;
     private Point position;
@@ -20,7 +21,8 @@ public class Bullet {
     /**
      * Create bullet at position targeting mouse
      */
-    public Bullet(Point startPos, Point targetPos, int damage) {
+    public Bullet(Point startPos, Point targetPos, int damage, Properties gameProps) {
+        this.speed = Double.parseDouble(gameProps.getProperty("bulletSpeed"));
         this.image = new Image(BULLET_IMAGE);
         this.position = startPos;
         this.active = true;
@@ -46,8 +48,8 @@ public class Bullet {
         
         // Move bullet
         position = new Point(
-            position.x + direction.x * SPEED,
-            position.y + direction.y * SPEED
+            position.x + direction.x * speed,
+            position.y + direction.y * speed
         );
         
         // Check screen boundaries

@@ -41,6 +41,9 @@ public class Store {
         isVisible = !isVisible;
     }
     
+	public void setVisible(boolean visible) {
+        isVisible = visible;
+    }
     public boolean isVisible() {
         return isVisible;
     }
@@ -77,7 +80,6 @@ public class Store {
     
     public void draw() {
         if (!isVisible) return;
-        
         // Draw store at specified position
         background.draw(storePosition.x, storePosition.y);
     }

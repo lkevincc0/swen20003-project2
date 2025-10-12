@@ -39,7 +39,7 @@ public class PlayerUI {
             font.drawString("HEALTH" + "-0.0" , healthStat.x, healthStat.y);
         }
         font.drawString("COINS" + " " + player.getCoins(), coinStat.x, coinStat.y);
-        font.drawString("WEAPON LEVEL" + " " + player.getCoins(), weaponStat.x, weaponStat.y);
-        font.drawString("KEYS" + " " + player.getCoins(), keyStat.x, keyStat.y);
+        font.drawString("WEAPON LEVEL" + " " + player.getWeaponLevel(), weaponStat.x, weaponStat.y);
+        font.drawString("KEYS" + " " + player.getKeys(), keyStat.x, keyStat.y);
     }
 }

@@ -27,9 +27,11 @@ public class Player {
     private List<Bullet> bullets;
     private int weaponLevel; // 0=Standard, 1=Advanced, 2=Elite
     private int framesSinceLastShot;
-    private static final int FIRE_RATE = 30; // frames between shots
-    private static final int[] WEAPON_DAMAGE = {30, 50, 100}; // damage per level
+    private final int fireRate;
+    private final int[] weaponDamage;
     private boolean characterSelected; // can only shoot after selecting character
+    private boolean isMarine = false; // track if Marine character
+    private Properties gameProps;
 
     // game logic
     public boolean Restart = false;
@@ -43,12 +45,19 @@ public class Player {
     private final Image restartImage;
     private final Image boxImage;
 
-    public Player(Point startPos, double health, int coins, int speed) {
+    public Player(Point startPos, double health, int coins, int speed, Properties gameProps) {
         this.position = startPos;
         this.health = health;
         this.coins = coins;
         this.keys = 0;
         this.speed = speed;
+        this.gameProps = gameProps;
+        this.fireRate = Integer.parseInt(gameProps.getProperty("bulletFreq"));
+        this.weaponDamage = new int[]{
+            Integer.parseInt(gameProps.getProperty("weaponStandardDamage")),
+            Integer.parseInt(gameProps.getProperty("weaponAdvanceDamage")),
+            Integer.parseInt(gameProps.getProperty("weaponEliteDamage"))
+        };
         this.playerLeft = new Image("res/player_left.png"); // default
         this.playerRight = new Image("res/player_right.png");
         this.facingRight = true;
@@ -137,8 +146,10 @@ public class Player {
             for (Point wp : riverBoundaries) {
                 Rectangle riverBox = riverImage.getBoundingBoxAt(wp);
                 if (playerBox.intersects(riverBox)) {
-                    health -= riverDamagePerFrame;
-                    // System.out.println(health);
+                    // Marine is immune to river damage
+                    if (!isMarine) {
+                        health -= riverDamagePerFrame;
+                    }
                 }
             }
         }
@@ -234,17 +245,22 @@ public class Player {
     public void setCharacterSelected(boolean selected) {
         this.characterSelected = selected;
     }
-    
+
     public boolean canShoot() {
-        return characterSelected;
+        return characterSelected && framesSinceLastShot >= fireRate;
+    }
+
+    public void setMarine(boolean marine) {
+        this.isMarine = marine;
     }
     
     public void shoot(Point mousePosition) {
         if (!canShoot()) return;
         
         // Create bullet immediately on click
-        Bullet bullet = new Bullet(position, mousePosition, WEAPON_DAMAGE[weaponLevel]);
+        Bullet bullet = new Bullet(position, mousePosition, weaponDamage[weaponLevel], gameProps);
         bullets.add(bullet);
+        framesSinceLastShot = 0; // Reset fire rate timer
     }
     
     public void updateBullets() {
@@ -349,6 +365,9 @@ public class Player {
         Point mouse = input.getMousePosition();
         facingRight = mouse.x >= position.x;
         
+        // Update fire rate timer
+        framesSinceLastShot++;
+        
         // Handle shooting
         if (input.wasPressed(MouseButtons.LEFT)) {
             shoot(mouse);
@@ -357,6 +376,12 @@ public class Player {
         // Update bullets
         updateBullets();
         
+        draw();
+        drawBullets();
+    }
+    
+    // Draw only method for paused state
+    public void drawOnly() {
         draw();
         drawBullets();
     }

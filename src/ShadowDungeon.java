@@ -52,7 +52,7 @@ public class ShadowDungeon extends AbstractGame {
         int coins = Integer.parseInt(gameProps.getProperty("initialCoins"));
         // speed
         int speed = Integer.parseInt(gameProps.getProperty("movingSpeed"));
-        this.player = new Player(playerPosition, health, coins, speed);
+        this.player = new Player(playerPosition, health, coins, speed, gameProps);
 
         /* Room */
         this.prepRoom = new PrepRoom(gameProps, messageProps);
@@ -156,7 +156,11 @@ public class ShadowDungeon extends AbstractGame {
             case "prep":
                 prepRoom.update(input);
                 positionUpdate(prepRoom.getDoors());
-                playerUpdate(input, PlayerUpdateConfig.forPrep(prepRoom.getRestartPosition()));
+                if (!store.isVisible()) {
+                    playerUpdate(input, PlayerUpdateConfig.forPrep(prepRoom.getRestartPosition()));
+                } else {
+                    player.drawOnly(); // Draw player when paused
+                }
                 if (player.Restart) {
                     currRoom = "prep";
                     resetGame(GAME_PROPS);
@@ -169,6 +173,7 @@ public class ShadowDungeon extends AbstractGame {
                     player.playerLeft = new Image("res/marine_left.png");
                     player.playerRight = new Image("res/marine_right.png");
                     player.setCharacterSelected(true);
+                    player.setMarine(true);
                 }
 
                 if (input.wasPressed(Keys.R)) {
@@ -176,6 +181,7 @@ public class ShadowDungeon extends AbstractGame {
                     player.playerLeft = new Image("res/robot_left.png");
                     player.playerRight = new Image("res/robot_right.png");
                     player.setCharacterSelected(true);
+                    player.setMarine(false);
                 }
                 break;
             case "A":
@@ -185,11 +191,15 @@ public class ShadowDungeon extends AbstractGame {
                 battleRoomA.getEnemyManager().checkBulletCollisions(player);
                 battleRoomA.checkBulletObstacleCollisions(player);
                 battleRoomA.checkFireballObstacleCollisions();
-                playerUpdate(input, PlayerUpdateConfig.forBattle(
-                        battleRoomA.getWallPositions(), battleRoomA.isWall(),
-                        battleRoomA.getRiverPositions(), battleRoomA.isRiver(),
-                        battleRoomA.getTreasureBoxes(), battleRoomA.getTreasureStatus()
-                ));
+                if (!store.isVisible()) {
+                    playerUpdate(input, PlayerUpdateConfig.forBattle(
+                            battleRoomA.getWallPositions(), battleRoomA.isWall(),
+                            battleRoomA.getRiverPositions(), battleRoomA.isRiver(),
+                            battleRoomA.getTreasureBoxes(), battleRoomA.getTreasureStatus()
+                    ));
+                } else {
+                    player.drawOnly(); // Draw player when paused
+                }
                 if (player.getHealth() <= 0) {
                     currRoom = "end";
                     endRoom.closeDoor();
@@ -202,11 +212,15 @@ public class ShadowDungeon extends AbstractGame {
                 battleRoomB.getEnemyManager().checkBulletCollisions(player);
                 battleRoomB.checkBulletObstacleCollisions(player);
                 battleRoomB.checkFireballObstacleCollisions();
-                playerUpdate(input, PlayerUpdateConfig.forBattle(
-                        battleRoomB.getWallPositions(), battleRoomB.isWall(),
-                        battleRoomB.getRiverPositions(), battleRoomB.isRiver(),
-                        battleRoomB.getTreasureBoxes(), battleRoomB.getTreasureStatus()
-                ));
+                if (!store.isVisible()) {
+                    playerUpdate(input, PlayerUpdateConfig.forBattle(
+                            battleRoomB.getWallPositions(), battleRoomB.isWall(),
+                            battleRoomB.getRiverPositions(), battleRoomB.isRiver(),
+                            battleRoomB.getTreasureBoxes(), battleRoomB.getTreasureStatus()
+                    ));
+                } else {
+                    player.drawOnly(); // Draw player when paused
+                }
                 if (player.getHealth() <= 0) {
                     currRoom = "end";
                     endRoom.closeDoor();
@@ -215,7 +229,11 @@ public class ShadowDungeon extends AbstractGame {
             case "end":
                 endRoom.update(input, player, MESSAGE_PROPS);
                 positionUpdate(endRoom.getDoors());
-                playerUpdate(input, PlayerUpdateConfig.forEnd(endRoom.getRestartPosition()));
+                if (!store.isVisible()) {
+                    playerUpdate(input, PlayerUpdateConfig.forEnd(endRoom.getRestartPosition()));
+                } else {
+                    player.drawOnly(); // Draw player when paused
+                }
                 if (player.Restart) {
                     currRoom = "prep";
                     resetGame(GAME_PROPS);
@@ -237,6 +255,17 @@ public class ShadowDungeon extends AbstractGame {
             store.update(input, player);
             store.draw();
         }
+
+		if (player.Restart) {
+			resetGame(GAME_PROPS);
+			currRoom = "prep";
+			// return to default image
+			player.playerLeft = new Image("res/player_left.png");
+			player.playerRight = new Image("res/player_right.png");
+			player.setCharacterSelected(false);
+			store.setVisible(false);
+			player.Restart = false;
+		}
     }
 
     /**
