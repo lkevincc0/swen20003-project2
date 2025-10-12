@@ -6,7 +6,7 @@ import bagel.util.Point;
 import entities.Door;
 import entities.EnemyManager;
 import entities.PlayerUI;
-import entities.Store;
+import rooms.Store;
 import utils.PlayerUpdateConfig;
 import utils.ReadDoor;
 import entities.Player;
@@ -146,18 +146,12 @@ public class ShadowDungeon extends AbstractGame {
             Window.close();
         }
         
-        // Handle store toggle
-        if (input.wasPressed(Keys.SPACE)) {
-            store.toggle();
-        }
-        
-        // If store is visible, handle store input and skip game updates
+		// Handle store input if visible and pause game updates
         if (store.isVisible()) {
             store.update(input, player);
             store.draw();
-            return;
         }
-
+		
         switch (currRoom) {
             case "prep":
                 prepRoom.update(input);
@@ -185,10 +179,12 @@ public class ShadowDungeon extends AbstractGame {
                 }
                 break;
             case "A":
-                battleRoomA.update(input);
+                battleRoomA.update(input, player, store);
                 positionUpdate(battleRoomA.getDoors());
                 enemiesUpdate(battleRoomA.getEnemyManager());
                 battleRoomA.getEnemyManager().checkBulletCollisions(player);
+                battleRoomA.checkBulletObstacleCollisions(player);
+                battleRoomA.checkFireballObstacleCollisions();
                 playerUpdate(input, PlayerUpdateConfig.forBattle(
                         battleRoomA.getWallPositions(), battleRoomA.isWall(),
                         battleRoomA.getRiverPositions(), battleRoomA.isRiver(),
@@ -200,10 +196,12 @@ public class ShadowDungeon extends AbstractGame {
                 }
                 break;
             case "B":
-                battleRoomB.update(input);
+                battleRoomB.update(input, player, store);
                 positionUpdate(battleRoomB.getDoors());
                 enemiesUpdate(battleRoomB.getEnemyManager());
                 battleRoomB.getEnemyManager().checkBulletCollisions(player);
+                battleRoomB.checkBulletObstacleCollisions(player);
+                battleRoomB.checkFireballObstacleCollisions();
                 playerUpdate(input, PlayerUpdateConfig.forBattle(
                         battleRoomB.getWallPositions(), battleRoomB.isWall(),
                         battleRoomB.getRiverPositions(), battleRoomB.isRiver(),
@@ -228,6 +226,17 @@ public class ShadowDungeon extends AbstractGame {
 
         // place at last, avoid be hidden
         playerUI.draw(player);
+        
+		/* Store only draw after player */
+        if (input.wasPressed(Keys.SPACE)) {
+            store.toggle();
+        }
+
+        // Update and draw store overlay if visible
+        if (store.isVisible()) {
+            store.update(input, player);
+            store.draw();
+        }
     }
 
     /**
