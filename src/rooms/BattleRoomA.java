@@ -90,6 +90,16 @@ public class BattleRoomA {
         return box.getOpenedMap();
     }
 
+    // Check bullet collisions with obstacles
+    public void checkBulletObstacleCollisions(Player player) {
+        player.checkBulletObstacleCollisions(wall, table, basket, doorToPrep, doorToB);
+    }
+    
+    // Check fireball collisions with obstacles
+    public void checkFireballObstacleCollisions() {
+        enemyManager.checkFireballObstacleCollisions(wall, table, basket, doorToPrep, doorToB);
+    }
+
     // reset
     public void reset(Properties gameProps) {
         doorToPrep = new Door(gameProps, "primarydoor.A");
@@ -99,7 +109,7 @@ public class BattleRoomA {
     }
 
     // update
-    public void update(Input input) {
+    public void update(Input input, Player player, rooms.Store store) {
         // draw background
         background.draw(Window.getWidth()/2.0, Window.getHeight()/2.0);
 
@@ -114,8 +124,12 @@ public class BattleRoomA {
             doorToB.lock();
         }
 
-        // enemies and doors animation
+        // Update enemies (including movement and shooting)
         if (enemyManager.hasAliveEnemies() && encounterStarted) {
+            // Only update enemies if store is not visible
+            if (!store.isVisible()) {
+                enemyManager.update(player.getPosition());
+            }
             enemyManager.draw();
         } else {
             if (!encounterStarted) {

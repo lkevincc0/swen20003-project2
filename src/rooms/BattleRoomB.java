@@ -92,16 +92,29 @@ public class BattleRoomB {
         return box.getOpenedMap();
     }
     // reset
+    // Check bullet collisions with obstacles
+    public void checkBulletObstacleCollisions(Player player) {
+        player.checkBulletObstacleCollisions(wall, table, basket, doorToA, doorToEnd);
+    }
+    
+    // Check fireball collisions with obstacles
+    public void checkFireballObstacleCollisions() {
+        enemyManager.checkFireballObstacleCollisions(wall, table, basket, doorToA, doorToEnd);
+    }
+
     public void reset(Properties gameProps) {
-        enemyManager = new EnemyManager(gameProps, "B");
         doorToA = new Door(gameProps, "primarydoor.B");
         doorToEnd = new Door(gameProps, "secondarydoor.B");
+        enemyManager = new EnemyManager(gameProps, "B");
         box = new TreasureBox(gameProps, "treasurebox.B");
     }
 
-    public void update(Input input) {
+    public void update(Input input, Player player, rooms.Store store) {
         // draw background
         background.draw(Window.getWidth()/2.0, Window.getHeight()/2.0);
+
+		// rivers - do this frist for prevent hideing others
+        river.draw();
 
         // door
         if (input.wasPressed(Keys.R) && !enemyManager.hasAliveEnemies()) {
@@ -114,8 +127,12 @@ public class BattleRoomB {
             doorToEnd.lock();
         }
 
-        // enemies and doors animation
+        // Update enemies (including movement and shooting)
         if (enemyManager.hasAliveEnemies() && encounterStarted) {
+            // Only update enemies if store is not visible
+            if (!store.isVisible()) {
+                enemyManager.update(player.getPosition());
+            }
             enemyManager.draw();
         } else {
             if (!encounterStarted) {
@@ -134,9 +151,6 @@ public class BattleRoomB {
 
         // wall
         wall.draw();
-
-        // rivers
-        river.draw();
 
         // box
         box.draw();

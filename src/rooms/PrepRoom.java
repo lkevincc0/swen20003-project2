@@ -120,7 +120,7 @@ public class PrepRoom {
         double moveMessageX = promptX - 70;
         promptFont.drawString(moveMessage, promptX, moveMessageY);
         promptFont.drawString(selectMessage, moveMessageX, selectMessageY);
-        promptFont.drawString(MarineMessage, MarineMessagePoint.x, MarineMessagePoint.y);
+        promptFont.drawString(MarineMessage, MarineMessagePoint.x - 50, MarineMessagePoint.y);
         promptFont.drawString(RobotMessage, RobotMessagePoint.x, RobotMessagePoint.y);
 
         if (input.wasPressed(Keys.R) && doorToA.getIsLocked()) {
