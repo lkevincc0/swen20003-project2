@@ -10,13 +10,12 @@ import java.util.Properties;
  */
 public class KeyBulletKin extends Enemy {
     private static final String KEY_BULLET_KIN_IMAGE = "res/key_bullet_kin.png";
-    private final int maxHealth;
     private final double movementSpeed;
     private final double contactDamage;
     private final int coinReward;
     private final int robotBonus;
     
-    private List<Point> movementPath;
+    private final List<Point> movementPath;
     private int currentTargetIndex;
     private Key droppedKey;
     
@@ -25,7 +24,6 @@ public class KeyBulletKin extends Enemy {
      */
     public KeyBulletKin(Point startPosition, List<Point> path, Properties gameProps) {
         super(new Image(KEY_BULLET_KIN_IMAGE), startPosition, Integer.parseInt(gameProps.getProperty("keyBulletKinHealth")));
-        this.maxHealth = Integer.parseInt(gameProps.getProperty("keyBulletKinHealth"));
         this.movementSpeed = Double.parseDouble(gameProps.getProperty("keyBulletKinSpeed"));
         this.contactDamage = 0.2; // Contact damage per frame (not in properties)
         this.coinReward = 0; // KeyBulletKin doesn't give coins directly

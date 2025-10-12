@@ -11,12 +11,12 @@ import java.util.Properties;
 public class Fireball {
     private static final String FIREBALL_IMAGE = "res/fireball.png";
     
-    private Image image;
+    private final Image image;
     private Point position;
-    private Vector2 direction;
+    private final Vector2 direction;
     private boolean active;
-    private double speed;
-    private int damage;
+    private final double speed;
+    private final int damage;
     
     /**
      * Create fireball at position targeting player

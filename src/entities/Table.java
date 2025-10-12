@@ -32,7 +32,7 @@ public class Table {
     }
 
     public boolean isDestroyed() {
-        return destroyed;
+        return !destroyed;
     }
 
     public void destroy() {

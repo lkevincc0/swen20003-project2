@@ -84,8 +84,7 @@ public class EnemyManager {
             enemy.update(playerPosition);
             
             // Check for dropped keys from KeyBulletKin
-            if (!enemy.isAlive() && enemy instanceof KeyBulletKin) {
-                KeyBulletKin keyEnemy = (KeyBulletKin) enemy;
+            if (!enemy.isAlive() && enemy instanceof KeyBulletKin keyEnemy) {
                 if (keyEnemy.hasDroppedKey() && !droppedKeys.contains(keyEnemy.getDroppedKey())) {
                     droppedKeys.add(keyEnemy.getDroppedKey());
                 }
@@ -110,16 +109,14 @@ public class EnemyManager {
         
         // Check fireball collisions
         for (Enemy enemy : enemies) {
-            if (enemy instanceof BulletKin) {
-                BulletKin bulletKin = (BulletKin) enemy;
+            if (enemy instanceof BulletKin bulletKin) {
                 for (Fireball fireball : bulletKin.getFireballs()) {
                     if (fireball.isActive() && player.getBoundingBox().intersects(fireball.getBoundingBox())) {
                         player.takeDamage(fireball.getDamage());
                         fireball.destroy();
                     }
                 }
-            } else if (enemy instanceof AshenBulletKin) {
-                AshenBulletKin ashenBulletKin = (AshenBulletKin) enemy;
+            } else if (enemy instanceof AshenBulletKin ashenBulletKin) {
                 for (Fireball fireball : ashenBulletKin.getFireballs()) {
                     if (fireball.isActive() && player.getBoundingBox().intersects(fireball.getBoundingBox())) {
                         player.takeDamage(fireball.getDamage());
@@ -143,7 +140,7 @@ public class EnemyManager {
      */
     public void checkBulletCollisions(Player player) {
         for (Bullet bullet : player.getBullets()) {
-            if (!bullet.isActive()) continue;
+            if (bullet.isActive()) continue;
             
             // Check collision with enemies
             for (Enemy enemy : enemies) {
@@ -181,49 +178,20 @@ public class EnemyManager {
     }
 
     /**
-     * Get all enemies
-     */
-    public List<Enemy> getEnemies() {
-        return enemies;
-    }
-
-    /**
      * Check if any enemies are alive
      */
     public boolean hasAliveEnemies() {
         return enemies.stream().anyMatch(Enemy::isAlive);
     }
-    
-    /**
-     * Get all dropped keys
-     */
-    public List<Key> getDroppedKeys() {
-        return droppedKeys;
-    }
-    
-    /**
-     * Clear all fireballs when leaving room
-     */
-    public void clearFireballs() {
-        for (Enemy enemy : enemies) {
-            if (enemy instanceof BulletKin) {
-                ((BulletKin) enemy).clearFireballs();
-            } else if (enemy instanceof AshenBulletKin) {
-                ((AshenBulletKin) enemy).clearFireballs();
-            }
-        }
-    }
-    
+
     /**
      * Check fireball collisions with obstacles
      */
     public void checkFireballObstacleCollisions(Wall wall, Table table, Basket basket, Door door1, Door door2) {
         for (Enemy enemy : enemies) {
-            if (enemy instanceof BulletKin) {
-                BulletKin bulletKin = (BulletKin) enemy;
+            if (enemy instanceof BulletKin bulletKin) {
                 bulletKin.checkFireballObstacleCollisions(wall, table, basket, door1, door2);
-            } else if (enemy instanceof AshenBulletKin) {
-                AshenBulletKin ashenBulletKin = (AshenBulletKin) enemy;
+            } else if (enemy instanceof AshenBulletKin ashenBulletKin) {
                 ashenBulletKin.checkFireballObstacleCollisions(wall, table, basket, door1, door2);
             }
         }

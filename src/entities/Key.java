@@ -10,8 +10,8 @@ import bagel.util.Rectangle;
 public class Key {
     private static final String KEY_IMAGE = "res/key.png";
     
-    private Image image;
-    private Point position;
+    private final Image image;
+    private final Point position;
     private boolean collected;
     
     /**

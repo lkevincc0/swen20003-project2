@@ -1,10 +1,20 @@
-a257c60 - jinbaol, 8 minutes ago : refactor: fix typos, remove unused code, format, simplify PlayerUpdate with record, add git logs
-9eea3ba - lkevincc, 3 hours ago : feat: add logic of treasure box into restart game, finish the treasure box part
-0a99eaf - lkevincc, 3 hours ago : feat: complete the logic of treasure box of player and add logic of box in main func
-cd2bc7c - lkevincc, 4 hours ago : feat: add TreasureBox using HashMap for position-coin mapping and basic draw support
-5e6864d - lkevincc, 4 hours ago : feat: Finish the logic of restart game
-b5e97ce - lkevincc, 5 hours ago : feat: Fix room formatting, add end prompt in EndRoom, update die logic and restart logic
-878958a - lkevincc, 7 hours ago : feat: add River logic, fix player update bug, add player UI
-708da27 - lkevincc, 8 hours ago : feat: add door animation with delayed enemy spawn, and implement wall rendering & collision
-6c2e435 - lkevincc, 14 hours ago : feat: add ReadDoor mapping and basic enemy logic
-c304e06 - lkevincc, 35 hours ago : feat: add Room and Door classes, setup basic structure
+ee7a06c - jinbaol, 17 seconds ago : refactor: fix typos, remove unused code, format
+57a5e79 - jinbaol, 5 minutes ago : feat: add physical effects of table and basket
+74c3e6d - jinbaol, 18 minutes ago : feat: finish the logic of the player and finish the store's function
+a13e3e0 - jinbaol, 23 minutes ago : fix: fix the shooting bug in enemies
+7ab3b22 - jinbaol, 7 hours ago : feat: add the logic of Space Pause
+0646e9e - jinbaol, 7 hours ago : feat: Finsih shooting of player and enemies in BatteleRoom
+3a1e1f7 - jinbaol, 26 hours ago : feat: implement the logic of player and enemies
+e5973fc - jinbaol, 31 hours ago : feat: add shoot system
+7b49507 - jinbaol, 31 hours ago : feat: Creat abstract emnmies and basic player weapon
+ad6cf1b - jinbaol, 35 hours ago : feat: setup project2 and implement the prep room
+c985776 - jinbaol, 6 weeks ago : refactor: fix typos, remove unused code, format, simplify PlayerUpdate with record, add git logs
+9eea3ba - lkevincc, 6 weeks ago : feat: add logic of treasure box into restart game, finish the treasure box part
+0a99eaf - lkevincc, 6 weeks ago : feat: complete the logic of treasure box of player and add logic of box in main func
+cd2bc7c - lkevincc, 6 weeks ago : feat: add TreasureBox using HashMap for position-coin mapping and basic draw support
+5e6864d - lkevincc, 6 weeks ago : feat: Finish the logic of restart game
+b5e97ce - lkevincc, 6 weeks ago : feat: Fix room formatting, add end prompt in EndRoom, update die logic and restart logic
+878958a - lkevincc, 6 weeks ago : feat: add River logic, fix player update bug, add player UI
+708da27 - lkevincc, 6 weeks ago : feat: add door animation with delayed enemy spawn, and implement wall rendering & collision
+6c2e435 - lkevincc, 6 weeks ago : feat: add ReadDoor mapping and basic enemy logic
+c304e06 - lkevincc, 6 weeks ago : feat: add Room and Door classes, setup basic structure

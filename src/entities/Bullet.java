@@ -12,11 +12,11 @@ public class Bullet {
     private static final String BULLET_IMAGE = "res/fireball.png"; // use fireball as bullet image
     private final double speed;
     
-    private Image image;
+    private final Image image;
     private Point position;
-    private Vector2 direction;
+    private final Vector2 direction;
     private boolean active;
-    private int damage;
+    private final int damage;
     
     /**
      * Create bullet at position targeting mouse
@@ -86,7 +86,7 @@ public class Bullet {
      * Check if bullet is active
      */
     public boolean isActive() {
-        return active;
+        return !active;
     }
     
     /**

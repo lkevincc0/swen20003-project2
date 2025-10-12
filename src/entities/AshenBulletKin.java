@@ -11,24 +11,22 @@ import java.util.Properties;
  */
 public class AshenBulletKin extends Enemy {
     private static final String ASHEN_BULLET_KIN_IMAGE = "res/ashen_bullet_kin.png";
-    
-    private final int maxHealth;
+
     private final int fireRate;
     private final double contactDamage;
     private final int coinReward;
     private final int robotBonus;
     
     private int framesSinceLastShot;
-    private List<Fireball> fireballs;
+    private final List<Fireball> fireballs;
     private Point playerPosition; // track player for targeting
-    private Properties gameProps;
+    private final Properties gameProps;
     
     /**
      * Create AshenBulletKin at position
      */
     public AshenBulletKin(Point position, Properties gameProps) {
         super(new Image(ASHEN_BULLET_KIN_IMAGE), position, Integer.parseInt(gameProps.getProperty("ashenBulletKinHealth")));
-        this.maxHealth = Integer.parseInt(gameProps.getProperty("ashenBulletKinHealth"));
         this.fireRate = Integer.parseInt(gameProps.getProperty("ashenBulletKinShootFrequency"));
         this.contactDamage = 0.2; // Contact damage per frame (not in properties)
         this.coinReward = Integer.parseInt(gameProps.getProperty("ashenBulletKinCoin"));
@@ -113,14 +111,14 @@ public class AshenBulletKin extends Enemy {
                 }
             }
             
-            // Check collision with table
-            if (fireball.getBoundingBox().intersects(table.getBoundingBox())) {
+            // Check collision with table (only if not destroyed)
+            if (table.isDestroyed() && fireball.getBoundingBox().intersects(table.getBoundingBox())) {
                 fireball.destroy();
                 return true;
             }
             
-            // Check collision with basket
-            if (fireball.getBoundingBox().intersects(basket.getBoundingBox())) {
+            // Check collision with basket (only if not destroyed)
+            if (basket.isDestroyed() && fireball.getBoundingBox().intersects(basket.getBoundingBox())) {
                 fireball.destroy();
                 return true;
             }

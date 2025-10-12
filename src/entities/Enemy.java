@@ -54,14 +54,6 @@ public abstract class Enemy {
     public void setPosition(Point newPosition) {
         this.position = newPosition;
     }
-    
-    public int getHealth() {
-        return health;
-    }
-    
-    public int getMaxHealth() {
-        return maxHealth;
-    }
 
     // Abstract methods for subclasses
     public abstract void update(Point playerPosition);

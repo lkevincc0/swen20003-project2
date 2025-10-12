@@ -296,14 +296,14 @@ public class Player {
             }
             
             // Check collision with table
-            if (!table.isDestroyed() && bullet.getBoundingBox().intersects(table.getBoundingBox())) {
+            if (table.isDestroyed() && bullet.getBoundingBox().intersects(table.getBoundingBox())) {
                 bullet.destroy();
                 table.destroy(); // Destroy table
                 return true;
             }
             
             // Check collision with basket
-            if (!basket.isDestroyed() && bullet.getBoundingBox().intersects(basket.getBoundingBox())) {
+            if (basket.isDestroyed() && bullet.getBoundingBox().intersects(basket.getBoundingBox())) {
                 bullet.destroy();
                 basket.destroy(); // Destroy basket
                 this.addCoins(basket.getCoinReward()); // Give coins to player
