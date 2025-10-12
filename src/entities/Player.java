@@ -24,14 +24,14 @@ public class Player {
     private boolean facingRight;
 
     // Shooting system
-    private List<Bullet> bullets;
+    private final List<Bullet> bullets;
     private int weaponLevel; // 0=Standard, 1=Advanced, 2=Elite
     private int framesSinceLastShot;
     private final int fireRate;
     private final int[] weaponDamage;
     private boolean characterSelected; // can only shoot after selecting character
     private boolean isMarine = false; // track if Marine character
-    private Properties gameProps;
+    private final Properties gameProps;
 
     // game logic
     public boolean Restart = false;
@@ -266,7 +266,7 @@ public class Player {
     public void updateBullets() {
         bullets.removeIf(bullet -> {
             bullet.update();
-            return !bullet.isActive();
+            return bullet.isActive();
         });
     }
     
@@ -280,14 +280,10 @@ public class Player {
         return new ArrayList<>(bullets);
     }
 
-    public void clearBullets() {
-        bullets.clear();
-    }
-
     // Check bullet collisions with obstacles
     public void checkBulletObstacleCollisions(Wall wall, Table table, Basket basket, Door door1, Door door2) {
         bullets.removeIf(bullet -> {
-            if (!bullet.isActive()) return true;
+            if (bullet.isActive()) return true;
             
             // Check collision with walls
             if (wall.isWall()) {
@@ -300,14 +296,17 @@ public class Player {
             }
             
             // Check collision with table
-            if (bullet.getBoundingBox().intersects(table.getBoundingBox())) {
+            if (!table.isDestroyed() && bullet.getBoundingBox().intersects(table.getBoundingBox())) {
                 bullet.destroy();
+                table.destroy(); // Destroy table
                 return true;
             }
             
             // Check collision with basket
-            if (bullet.getBoundingBox().intersects(basket.getBoundingBox())) {
+            if (!basket.isDestroyed() && bullet.getBoundingBox().intersects(basket.getBoundingBox())) {
                 bullet.destroy();
+                basket.destroy(); // Destroy basket
+                this.addCoins(basket.getCoinReward()); // Give coins to player
                 return true;
             }
             
@@ -338,14 +337,6 @@ public class Player {
     
     public int getKeys() {
         return keys;
-    }
-    
-    public boolean useKey() {
-        if (keys > 0) {
-            keys--;
-            return true;
-        }
-        return false;
     }
 
     // update function
