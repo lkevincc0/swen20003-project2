@@ -8,6 +8,7 @@ a13e3e0 - jinbaol, 23 minutes ago : fix: fix the shooting bug in enemies
 e5973fc - jinbaol, 31 hours ago : feat: add shoot system
 7b49507 - jinbaol, 31 hours ago : feat: Creat abstract emnmies and basic player weapon
 ad6cf1b - jinbaol, 35 hours ago : feat: setup project2 and implement the prep room
+# Project 1 below
 c985776 - jinbaol, 6 weeks ago : refactor: fix typos, remove unused code, format, simplify PlayerUpdate with record, add git logs
 9eea3ba - lkevincc, 6 weeks ago : feat: add logic of treasure box into restart game, finish the treasure box part
 0a99eaf - lkevincc, 6 weeks ago : feat: complete the logic of treasure box of player and add logic of box in main func
